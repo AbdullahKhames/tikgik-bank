@@ -2,6 +2,7 @@ package live.tikgik.bank.account.contrtoller;
 
 import jakarta.validation.Valid;
 import live.tikgik.bank.account.dto.request.CustomerRequestDto;
+import live.tikgik.bank.account.dto.request.LoginRequest;
 import live.tikgik.bank.account.dto.response.ResponseDto;
 import live.tikgik.bank.account.service.AuthService;
 import live.tikgik.bank.account.utils.ResponseBuilder;
@@ -23,6 +24,13 @@ public class AuthController {
         String response = authService.signup(customerRequestDto);
         return ResponseEntity
                 .ok(ResponseBuilder.buildSuccessResponse(response, "Signup successful"));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ResponseDto<String>> login(@Valid LoginRequest customerRequestDto) {
+        String response = authService.login(customerRequestDto);
+        return ResponseEntity
+                .ok(ResponseBuilder.buildSuccessResponse(response, "login successful"));
     }
 
 }

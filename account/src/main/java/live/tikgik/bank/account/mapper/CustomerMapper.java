@@ -1,5 +1,6 @@
 package live.tikgik.bank.account.mapper;
 import live.tikgik.bank.account.dto.request.CustomerRequestDto;
+import live.tikgik.bank.account.dto.response.CustomerResponseDto;
 import live.tikgik.bank.account.entity.Customer;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
@@ -16,5 +17,5 @@ import org.mapstruct.MappingConstants;
 )
 public interface CustomerMapper {
     Customer toEntity(CustomerRequestDto customerRequestDto);
-    CustomerRequestDto toDto(Customer customer);
+    CustomerResponseDto toDto(Customer customer);
 }
