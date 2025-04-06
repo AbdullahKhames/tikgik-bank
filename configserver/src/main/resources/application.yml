@@ -1,0 +1,51 @@
+server:
+  port: 8071
+encrypt:
+  key: "123DWQWE213adsg548"
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+spring:
+  application:
+    name: configserver
+  # to read configurations from git git profile is used!
+  profiles:
+    active: git
+  cloud:
+    config:
+      server:
+        git:
+          uri: "https://github.com/AbdullahKhames/tikgik-bank-config"
+          # the branch to lookup for
+          default-label: main
+          # exception after not able to connect to the repo in seconds
+          timeout: 5
+          # during start-up it tries to clone the repo
+          clone-on-start: true
+          # override the local changes when ever you try to start or restart the config server
+          force-pull: true
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: guest
+    password: guest
+  # to read configurations from class path use native profile!
+#  profiles:
+#    active: native
+#  cloud:
+#    config:
+#      server:
+#        native:
+#          search-locations: "classpath:/config"
+  # to read configurations from file system use native profile also!
+#  profiles:
+#    active: native
+#  cloud:
+#    config:
+#      server:
+#        native:
+##          search-locations: "classpath:/config"
+#          search-locations: "file:///D:\\dev\\projects\\tikgik-bank\\configs"
+

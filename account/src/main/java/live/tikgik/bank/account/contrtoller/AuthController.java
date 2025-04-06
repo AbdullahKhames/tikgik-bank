@@ -1,11 +1,11 @@
 package live.tikgik.bank.account.contrtoller;
 
+import live.tikgik.bank.commons.uils.ResponseBuilder;
+import live.tikgik.bank.commons.dto.response.ResponseDto;
 import jakarta.validation.Valid;
 import live.tikgik.bank.account.dto.request.CustomerRequestDto;
 import live.tikgik.bank.account.dto.request.LoginRequest;
-import live.tikgik.bank.account.dto.response.ResponseDto;
 import live.tikgik.bank.account.service.AuthService;
-import live.tikgik.bank.account.utils.ResponseBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package live.tikgik.bank.account.dto.response;
+package live.tikgik.bank.commons.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

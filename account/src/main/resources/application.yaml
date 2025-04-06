@@ -2,7 +2,17 @@ server:
     port: 8081
     servlet:
         context-path: /api/v1
+logging:
+  level:
+    web: debug
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 spring:
+  application:
+    name: account
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/tikgik_bank}
     username: ${DB_USERNAME:dev}
@@ -16,8 +26,35 @@ spring:
           hibernate:
               dialect: ${DB_DIALECT:org.hibernate.dialect.PostgreSQLDialect}
       open-in-view: false
-  application:
-    name: account
-logging:
-  level:
-    web: debug
+
+  profiles:
+    active: ${ACTIVE_PROFILE:prod}
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: guest
+    password: guest
+    # command to run rabbit mq docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:4.0-management
+  #commented because we will be using the spring cloud config server instead of the spring boot configurations.
+#  config:
+#    import:
+#      - "application_qa.yml"
+#      - "application_prod.yml"
+#  profiles:
+#    active: prod
+#
+#
+#
+#build:
+#  version: "3.0"
+#
+#accounts:
+#  message: "Welcome to EazyBank accounts related local APIs "
+#  contactDetails:
+#    name: "John Doe - Developer"
+#    email: "john@eazybank.com"
+#  onCallSupport:
+#    - (555) 555-1234
+#    - (555) 523-1345

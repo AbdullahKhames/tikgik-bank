@@ -1,7 +1,7 @@
-package live.tikgik.bank.account.utils;
+package live.tikgik.bank.commons.uils;
 
-import live.tikgik.bank.account.dto.response.ErrorDto;
-import live.tikgik.bank.account.dto.response.ResponseDto;
+
+import live.tikgik.bank.commons.dto.response.ResponseDto;
 import org.springframework.http.HttpStatus;
 
 public class ResponseBuilder {
