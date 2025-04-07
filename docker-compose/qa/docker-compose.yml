@@ -1,30 +1,70 @@
+version: '3.8'
+
 services:
-  rabbit:
-    image: rabbitmq:3.13-management
-    hostname: rabbitmq
+  # rabbit:
+  #   image: rabbitmq:4.0-management
+  #   hostname: rabbitmq
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
+  #   healthcheck:
+  #     test: rabbitmq-diagnostics check_port_connectivity
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 10
+  #     start_period: 5s
+  #   extends:
+  #     file: common-config.yml
+  #     service: network-deploy-service
+
+  accountsDb:
+    image: postgres
+    container_name: accounts-Db
     ports:
-      - "5672:5672"
-      - "15672:15672"
-    healthcheck:
-      test: rabbitmq-diagnostics check_port_connectivity
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 5s
+      - "5432:5432"
+    volumes:
+      - accountdb-data:/var/lib/postgresql/data
+      - D:\dev\projects\tikgik-bank\account\init.sql:/docker-entrypoint-initdb.d/init.sql
     extends:
       file: common-config.yml
-      service: network-deploy-service
+      service: microservice-db-config
 
+  banksDb:
+    image: postgres
+    container_name: banks-Db
+    ports:
+      - "5433:5432"
+    volumes:
+      - bankdb-data:/var/lib/postgresql/data
+      - D:\dev\projects\tikgik-bank\bank\init.sql:/docker-entrypoint-initdb.d/init.sql
+    extends:
+      file: common-config.yml
+      service: microservice-db-config
+
+  cardsDb:
+    image: postgres
+    container_name: cards-Db
+    ports:
+      - "5434:5432"
+    volumes:
+      - carddb-data:/var/lib/postgresql/data
+      - D:\dev\projects\tikgik-bank\card\init.sql:/docker-entrypoint-initdb.d/init.sql
+    extends:
+      file: common-config.yml
+      service: microservice-db-config
   configserver:
-    image: "khames96/configserver:s6"
+    # build:
+    #   context: ../../configserver
+    #   dockerfile: Dockerfile
+    image: khames96/configserver:s7
     container_name: configserver-ms
     ports:
       - "8071:8071"
-    depends_on:
-      rabbit:
-        condition: service_healthy
+    # depends_on:
+    #   rabbit:
+    #     condition: service_healthy
     healthcheck:
-      test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8071/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -34,43 +74,61 @@ services:
       service: microservice-base-config
 
   accounts:
-    image: "khames96/accounts:s6"
+    # build:
+    #   context: ../../account
+    #   dockerfile: Dockerfile
+    image: khames96/account:s7
     container_name: accounts-ms
     ports:
-      - "8080:8080"
+      - "8081:8081"
     depends_on:
       configserver:
         condition: service_healthy
+      accountsDb:
+        condition: service_healthy
     environment:
-      SPRING_APPLICATION_NAME: "accounts"
+      SPRING_APPLICATION_NAME: "account"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://accountsDb:5432/tikgik_bank_account"
     extends:
       file: common-config.yml
       service: microservice-configserver-config
 
   banks:
-    image: "khames96/banks:s6"
+    # build:
+    #   context: ../../bank
+    #   dockerfile: Dockerfile
+    image: khames96/bank:s7
     container_name: banks-ms
     ports:
-      - "8090:8090"
+      - "8083:8083"
     depends_on:
       configserver:
         condition: service_healthy
+      banksDb:
+        condition: service_healthy
     environment:
-      SPRING_APPLICATION_NAME: "banks"
+      SPRING_APPLICATION_NAME: "bank"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://banksDb:5432/tikgik_bank_bank"
     extends:
       file: common-config.yml
       service: microservice-configserver-config
 
   cards:
-    image: "khames96/cards:s6"
+    # build:
+    #   context: ../../card
+    #   dockerfile: Dockerfile
+    image: khames96/card:s7
     container_name: cards-ms
     ports:
-      - "9000:9000"
+      - "8082:8082"
     depends_on:
       configserver:
         condition: service_healthy
+      cardsDb:
+        condition: service_healthy
     environment:
-      SPRING_APPLICATION_NAME: "cards"
+      SPRING_APPLICATION_NAME: "card"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://cardsDb:5432/tikgik_bank_card"
     extends:
       file: common-config.yml
       service: microservice-configserver-config
@@ -78,3 +136,8 @@ services:
 networks:
   eazybank:
     driver: "bridge"
+
+volumes:
+  accountdb-data:
+  bankdb-data:
+  carddb-data:

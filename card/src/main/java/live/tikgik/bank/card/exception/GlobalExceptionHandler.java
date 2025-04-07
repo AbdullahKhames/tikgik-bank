@@ -3,9 +3,10 @@ package live.tikgik.bank.card.exception;
 
 
 
-import live.tikgik.bank.commons.dto.response.ErrorDto;
-import live.tikgik.bank.commons.dto.response.ResponseDto;
-import live.tikgik.bank.commons.uils.ResponseBuilder;
+
+import live.tikgik.bank.card.dto.response.ErrorDto;
+import live.tikgik.bank.card.dto.response.ResponseDto;
+import live.tikgik.bank.card.uils.ResponseBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

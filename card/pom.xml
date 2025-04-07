@@ -88,16 +88,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>live.tikgik.bank</groupId>
-			<artifactId>commons</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
+
+<!--		<dependency>-->
+<!--			<groupId>com.h2database</groupId>-->
+<!--			<artifactId>h2</artifactId>-->
+<!--			<scope>runtime</scope>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-config</artifactId>
@@ -144,16 +140,26 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>org.springframework.boot</groupId>-->
+<!--				<artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--				<configuration>-->
+<!--					<excludes>-->
+<!--						<exclude>-->
+<!--							<groupId>org.projectlombok</groupId>-->
+<!--							<artifactId>lombok</artifactId>-->
+<!--						</exclude>-->
+<!--					</excludes>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.4.5</version>
 				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
+					<to>
+						<image>khames96/${project.artifactId}:s7</image>
+					</to>
 				</configuration>
 			</plugin>
 		</plugins>

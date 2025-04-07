@@ -14,7 +14,8 @@ spring:
   application:
     name: account
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/tikgik_bank}
+#    url: ${DB_URL:jdbc:postgresql://localhost:5432/tikgik_bank_account}
+    url: ${DB_URL_ACCOUNT:jdbc:postgresql://localhost:5432/tikgik_bank_account}
     username: ${DB_USERNAME:dev}
     password: ${DB_PASSWORD:123}
     driver-class-name: ${DB_DRIVER:org.postgresql.Driver}
@@ -30,7 +31,7 @@ spring:
   profiles:
     active: ${ACTIVE_PROFILE:prod}
   config:
-    import: "optional:configserver:http://localhost:8071/"
+    import: ${CONFIG_SERVER_URL:optional:configserver:http://localhost:8071/}
   rabbitmq:
     host: "localhost"
     port: 5672
