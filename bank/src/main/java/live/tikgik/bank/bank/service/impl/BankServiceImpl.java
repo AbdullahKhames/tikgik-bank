@@ -26,22 +26,27 @@ public class BankServiceImpl implements BankService {
 
     public BankResponseDto createBank(BankRequestDto accountRequestDto) {
         Bank bank = bankMapper.fromDto(accountRequestDto);
+        bank.setBankNumber("123");
+        bank.setBankType("bank");
+        bank.setTotalAmount(100000);
+        bank.setAmountPaid(100000);
+        bank.setOutstandingAmount(100000);
         return bankMapper.toDto(bankRepository.save(bank));
     }
 
     @Override
     @Transactional
 
-    public String deleteBank(Long accountId) {
-        Bank bank = bankRepository.findById(accountId)
+    public String deleteBank(String accountId) {
+        Bank bank = bankRepository.findByMobileNumber(accountId)
                 .orElseThrow(() -> new ResourceNotFoundException("Bank", "accountId", accountId));
         bankRepository.delete(bank);
         return "deleted successfully";
     }
 
     @Override
-    public BankResponseDto getBank(Long accountId) {
-        Bank bank = bankRepository.findById(accountId)
+    public BankResponseDto getBank(String accountId) {
+        Bank bank = bankRepository.findByMobileNumber(accountId)
                 .orElseThrow(() -> new ResourceNotFoundException("Bank", "accountId", accountId));
         return bankMapper.toDto(bank);
     }
@@ -57,8 +62,8 @@ public class BankServiceImpl implements BankService {
     @Override
     @Transactional
 
-    public BankResponseDto updateBank(Long accountId, BankRequestDto accountRequestDto) {
-        Bank bank = bankRepository.findById(accountId)
+    public BankResponseDto updateBank(String accountId, BankRequestDto accountRequestDto) {
+        Bank bank = bankRepository.findByMobileNumber(accountId)
                 .orElseThrow(() -> new ResourceNotFoundException("Bank", "accountId", accountId));
         bankMapper.updateBank(bank, accountRequestDto);
         return bankMapper.toDto(bankRepository.save(bank));

@@ -2,6 +2,7 @@ package live.tikgik.bank.account.mapper;
 
 import live.tikgik.bank.account.dto.request.AccountRequestDto;
 import live.tikgik.bank.account.dto.response.AccountResponseDto;
+import live.tikgik.bank.account.dto.response.AccountsDto;
 import live.tikgik.bank.account.entity.Account;
 import org.mapstruct.*;
 
@@ -18,6 +19,7 @@ import org.mapstruct.*;
 public interface AccountMapper {
     Account toEntity(AccountRequestDto accountRequestDto);
     AccountResponseDto toDto(Account account);
+    AccountsDto toAccountsDto(Account account);
 
     @Mappings({
             @Mapping(target = "customerId", ignore = true)

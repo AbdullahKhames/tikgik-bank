@@ -8,11 +8,11 @@ import java.util.List;
 public interface BankService {
     BankResponseDto createBank(BankRequestDto accountRequestDto);
 
-    String deleteBank(Long accountId);
+    String deleteBank(String accountId);
 
-    BankResponseDto getBank(Long accountId);
+    BankResponseDto getBank(String accountId);
 
     List<BankResponseDto> getAllBanks();
 
-    BankResponseDto updateBank(Long accountId, BankRequestDto accountRequestDto);
+    BankResponseDto updateBank(String accountId, BankRequestDto accountRequestDto);
 }

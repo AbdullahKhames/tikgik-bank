@@ -29,7 +29,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public AccountResponseDto createAccount(AccountRequestDto accountRequestDto) {
-        Customer customer = customerService.findById(accountRequestDto.getCustomerId());
+        Customer customer = customerService.findByNumberd(accountRequestDto.getMobileNumber());
         Account account = accountMapper.toEntity(accountRequestDto);
         account.setCustomerId(customer.getCustomerId());
         account.setAccountNumber(10000000000L + random.nextInt(0, Integer.MAX_VALUE));

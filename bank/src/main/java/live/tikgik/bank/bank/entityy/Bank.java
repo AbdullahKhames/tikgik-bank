@@ -15,7 +15,17 @@ import lombok.*;
 public class Bank {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long bankNumber;
-    private Long customerId;
-    private Double bankAmount;
+    private Long bankId;
+
+    private String mobileNumber;
+
+    private String bankNumber;
+
+    private String bankType;
+
+    private int totalAmount;
+
+    private int amountPaid;
+
+    private int outstandingAmount;
 }

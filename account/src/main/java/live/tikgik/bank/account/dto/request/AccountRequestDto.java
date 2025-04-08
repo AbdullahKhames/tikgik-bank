@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class AccountRequestDto {
-    private Long customerId;
+    private String mobileNumber;
     private String accountType;
     private String branchAddress;
 }

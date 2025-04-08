@@ -8,11 +8,11 @@ import java.util.List;
 public interface CardService {
     CardResponseDto createCard(CardRequestDto accountRequestDto);
 
-    String deleteCard(Long accountId);
+    String deleteCard(String accountId);
 
-    CardResponseDto getCard(Long accountId);
+    CardResponseDto getCard(String accountId);
 
     List<CardResponseDto> getAllCards();
 
-    CardResponseDto updateCard(Long accountId, CardRequestDto accountRequestDto);
+    CardResponseDto updateCard(String accountId, CardRequestDto accountRequestDto);
 }

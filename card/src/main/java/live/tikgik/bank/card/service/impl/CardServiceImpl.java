@@ -25,24 +25,26 @@ public class CardServiceImpl implements CardService {
     @Transactional
     public CardResponseDto createCard(CardRequestDto accountRequestDto) {
         Card card = cardMapper.fromDto(accountRequestDto);
-        card.setInterestRate(0.1);
-        card.setPaidAmount(0.0);
+        card.setCardNumber("12312351");
+        card.setCardType("debit");
+        card.setAvailableAmount(1003202303);
+        card.setAmountUsed(12312);
+        card.setTotalLimit(1003202304);
         return cardMapper.toDto(cardRepository.save(card));
     }
 
     @Override
     @Transactional
-
-    public String deleteCard(Long accountId) {
-        Card card = cardRepository.findById(accountId)
+    public String deleteCard(String accountId) {
+        Card card = cardRepository.findByMobileNumber(accountId)
                 .orElseThrow(() -> new ResourceNotFoundException("Card", "accountId", accountId));
         cardRepository.delete(card);
         return "deleted successfully";
     }
 
     @Override
-    public CardResponseDto getCard(Long accountId) {
-        Card card = cardRepository.findById(accountId)
+    public CardResponseDto getCard(String accountId) {
+        Card card = cardRepository.findByMobileNumber(accountId)
                 .orElseThrow(() -> new ResourceNotFoundException("Card", "accountId", accountId));
         return cardMapper.toDto(card);
     }
@@ -55,11 +57,12 @@ public class CardServiceImpl implements CardService {
                 .toList();
     }
 
+
     @Override
     @Transactional
 
-    public CardResponseDto updateCard(Long accountId, CardRequestDto accountRequestDto) {
-        Card card = cardRepository.findById(accountId)
+    public CardResponseDto updateCard(String accountId, CardRequestDto accountRequestDto) {
+        Card card = cardRepository.findByMobileNumber(accountId)
                 .orElseThrow(() -> new ResourceNotFoundException("Card", "accountId", accountId));
         cardMapper.updateCard(card, accountRequestDto);
         return cardMapper.toDto(cardRepository.save(card));

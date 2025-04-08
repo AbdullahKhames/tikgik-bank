@@ -19,8 +19,6 @@ import org.mapstruct.*;
 public interface CardMapper {
     Card fromDto(CardRequestDto cardRequestDto);
     CardResponseDto toDto(Card card);
-    @Mappings({
-            @Mapping(target = "customerId", ignore = true)
-    })
+
     void updateCard(@MappingTarget Card card, CardRequestDto cardRequestDto);
 }

@@ -19,8 +19,6 @@ import org.mapstruct.*;
 public interface BankMapper {
     Bank fromDto(BankRequestDto bankRequestDto);
     BankResponseDto toDto(Bank bank);
-    @Mappings({
-            @Mapping(target = "customerId", ignore = true)
-    })
+
     void updateBank(@MappingTarget Bank bank, BankRequestDto bankRequestDto);
 }

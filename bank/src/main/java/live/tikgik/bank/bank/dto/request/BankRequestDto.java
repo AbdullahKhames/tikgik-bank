@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class BankRequestDto {
-    private Long customerId;
-    private Double bankAmount;
+    private String mobileNumber;
 }

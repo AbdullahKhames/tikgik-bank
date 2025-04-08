@@ -12,6 +12,7 @@ import lombok.*;
 @ToString
 public class Account extends BaseEntity {
     private Long customerId;
+    private String mobileNumber;
     @Id
     private Long accountNumber;
     private String accountType;

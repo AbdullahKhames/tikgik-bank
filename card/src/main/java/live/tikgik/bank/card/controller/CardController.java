@@ -24,11 +24,11 @@ public class CardController {
         return ResponseEntity.ok(cardService.createCard(cardRequestDto));
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
+    public ResponseEntity<String> delete(@PathVariable String id) {
         return ResponseEntity.ok(cardService.deleteCard(id));
     }
     @GetMapping("/{id}")
-    public ResponseEntity<CardResponseDto> get(@PathVariable Long id) {
+    public ResponseEntity<CardResponseDto> get(@PathVariable String id) {
         return ResponseEntity.ok(cardService.getCard(id));
     }
     @GetMapping
@@ -36,7 +36,7 @@ public class CardController {
         return ResponseEntity.ok(cardService.getAllCards());
     }
     @PutMapping("/{id}")
-    public ResponseEntity<CardResponseDto> update(@PathVariable Long id, @RequestBody CardRequestDto cardRequestDto) {
+    public ResponseEntity<CardResponseDto> update(@PathVariable String id, @RequestBody CardRequestDto cardRequestDto) {
         return ResponseEntity.ok(cardService.updateCard(id, cardRequestDto));
     }
 

@@ -24,11 +24,11 @@ public class BankController {
         return ResponseEntity.ok(bankService.createBank(bankRequestDto));
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
+    public ResponseEntity<String> delete(@PathVariable String id) {
         return ResponseEntity.ok(bankService.deleteBank(id));
     }
     @GetMapping("/{id}")
-    public ResponseEntity<BankResponseDto> get(@PathVariable Long id) {
+    public ResponseEntity<BankResponseDto> get(@PathVariable String id) {
         return ResponseEntity.ok(bankService.getBank(id));
     }
     @GetMapping
@@ -36,7 +36,7 @@ public class BankController {
         return ResponseEntity.ok(bankService.getAllBanks());
     }
     @PutMapping("/{id}")
-    public ResponseEntity<BankResponseDto> update(@PathVariable Long id, @RequestBody BankRequestDto bankRequestDto) {
+    public ResponseEntity<BankResponseDto> update(@PathVariable String id, @RequestBody BankRequestDto bankRequestDto) {
         return ResponseEntity.ok(bankService.updateBank(id, bankRequestDto));
     }
 

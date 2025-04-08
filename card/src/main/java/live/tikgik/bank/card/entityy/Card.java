@@ -15,9 +15,18 @@ import lombok.*;
 public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long cardNumber;
-    private Long customerId;
-    private Double cardAmount;
-    private Double interestRate;
-    private Double paidAmount;
+    private Long cardId;
+
+    private String mobileNumber;
+
+    private String cardNumber;
+
+    private String cardType;
+
+    private int totalLimit;
+
+    private int amountUsed;
+
+    private int availableAmount;
+
 }

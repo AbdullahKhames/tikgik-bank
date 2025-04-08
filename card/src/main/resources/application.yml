@@ -5,11 +5,7 @@ server:
 logging:
   level:
     web: debug
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
+
 spring:
   datasource:
 #    url: ${DB_URL:jdbc:postgresql://localhost:5432/tikgik_bank_card}
@@ -36,6 +32,32 @@ spring:
     port: 5672
     username: guest
     password: guest
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8070/eureka/
+
+info:
+  app:
+    name: "accounts"
+    description: "Eazy Bank Accounts Application"
+    version: "1.0.0"
 #  config:
 #    import:
 #      - "application_qa.yml"
