@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
         description = "REST APIs in EazyBank to FETCH customer details"
 )
 @RestController
-@RequestMapping(path="/customers", produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(path="/v1/customers", produces = {MediaType.APPLICATION_JSON_VALUE})
 @Validated
 public class CustomerController {
 

@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/banks")
+@RequestMapping("/v1/banks")
 public class BankController {
     private final BankService bankService;
     private final BanksContactInfoDto accountsContactInfoDto;

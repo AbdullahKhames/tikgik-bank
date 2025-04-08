@@ -30,6 +30,13 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public AccountResponseDto createAccount(AccountRequestDto accountRequestDto) {
         Customer customer = customerService.findByNumberd(accountRequestDto.getMobileNumber());
+        Account existingAccount = accountRepository.findByCustomerId(customer.getCustomerId()).orElse(null);
+        if (existingAccount != null) {
+            AccountResponseDto dto = accountMapper.toDto(existingAccount);
+            dto.setCustomer(customerService.toDto(customer));
+            return dto;
+
+        }
         Account account = accountMapper.toEntity(accountRequestDto);
         account.setCustomerId(customer.getCustomerId());
         account.setAccountNumber(10000000000L + random.nextInt(0, Integer.MAX_VALUE));
