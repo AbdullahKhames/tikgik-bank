@@ -56,7 +56,7 @@ services:
     # build:
     #   context: ../../configserver
     #   dockerfile: Dockerfile
-    image: khames96/configserver:s7
+    image: khames96/configserver:s8
     container_name: configserver-ms
     ports:
       - "8071:8071"
@@ -64,7 +64,7 @@ services:
     #   rabbit:
     #     condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8071/actuator/health"]
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8071/actuator/health/readiness"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -72,18 +72,39 @@ services:
     extends:
       file: common-config.yml
       service: microservice-base-config
-
+  eurekaserver:
+    # build:
+    #   context: ../../eurekaserver
+    #   dockerfile: Dockerfile
+    image: khames96/eurekaserver:s8
+    container_name: eurekaserver-ms
+    ports:
+      - "8070:8070"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8070/actuator/health/readiness"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    extends:
+      file: common-config.yml
+      service: microservice-base-config
+    depends_on:
+      configserver:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: eurekaserver
+      CONFIG_SERVER_URL: configserver:http://configserver:8071/
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
   accounts:
     # build:
     #   context: ../../account
     #   dockerfile: Dockerfile
-    image: khames96/account:s7
+    image: khames96/account:s8
     container_name: accounts-ms
     ports:
       - "8081:8081"
     depends_on:
-      configserver:
-        condition: service_healthy
       accountsDb:
         condition: service_healthy
     environment:
@@ -97,13 +118,11 @@ services:
     # build:
     #   context: ../../bank
     #   dockerfile: Dockerfile
-    image: khames96/bank:s7
+    image: khames96/bank:s8
     container_name: banks-ms
     ports:
       - "8083:8083"
     depends_on:
-      configserver:
-        condition: service_healthy
       banksDb:
         condition: service_healthy
     environment:
@@ -117,13 +136,11 @@ services:
     # build:
     #   context: ../../card
     #   dockerfile: Dockerfile
-    image: khames96/card:s7
+    image: khames96/card:s8
     container_name: cards-ms
     ports:
       - "8082:8082"
     depends_on:
-      configserver:
-        condition: service_healthy
       cardsDb:
         condition: service_healthy
     environment:
@@ -134,7 +151,7 @@ services:
       service: microservice-configserver-config
 
 networks:
-  eazybank:
+  tikgikBank:
     driver: "bridge"
 
 volumes:
