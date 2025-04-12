@@ -1,5 +1,6 @@
 package live.tikgik.bank.card.controller;
 
+import live.tikgik.bank.card.aop.ToLog;
 import live.tikgik.bank.card.config.CardsContactInfoDto;
 import live.tikgik.bank.card.dto.request.CardRequestDto;
 import live.tikgik.bank.card.dto.response.CardResponseDto;
@@ -20,33 +21,52 @@ public class CardController {
     @Value("${build.version}")
     private String buildVersion;
     @PostMapping
-    public ResponseEntity<CardResponseDto> create(@RequestBody CardRequestDto cardRequestDto) {
+    @ToLog
+    public ResponseEntity<CardResponseDto> create(
+            @RequestHeader("tikGik-correlation-id") String correlationId,
+            @RequestBody CardRequestDto cardRequestDto) {
         return ResponseEntity.ok(cardService.createCard(cardRequestDto));
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable String id) {
+    @ToLog
+    public ResponseEntity<String> delete(
+            @RequestHeader("tikGik-correlation-id") String correlationId,
+            @PathVariable String id) {
         return ResponseEntity.ok(cardService.deleteCard(id));
     }
+    @ToLog
     @GetMapping("/{id}")
-    public ResponseEntity<CardResponseDto> get(@PathVariable String id) {
+    public ResponseEntity<CardResponseDto> get(
+            @RequestHeader("tikGik-correlation-id") String correlationId,
+            @PathVariable String id) {
         return ResponseEntity.ok(cardService.getCard(id));
     }
+    @ToLog
     @GetMapping
-    public ResponseEntity<List<CardResponseDto>> getAll() {
+    public ResponseEntity<List<CardResponseDto>> getAll(
+            @RequestHeader("tikGik-correlation-id") String correlationId
+            ) {
         return ResponseEntity.ok(cardService.getAllCards());
     }
+    @ToLog
     @PutMapping("/{id}")
-    public ResponseEntity<CardResponseDto> update(@PathVariable String id, @RequestBody CardRequestDto cardRequestDto) {
+    public ResponseEntity<CardResponseDto> update(
+            @RequestHeader("tikGik-correlation-id") String correlationId,
+            @PathVariable String id, @RequestBody CardRequestDto cardRequestDto) {
         return ResponseEntity.ok(cardService.updateCard(id, cardRequestDto));
     }
-
+    @ToLog
     @GetMapping("/build-version")
-    public String test() {
+    public String test(
+            @RequestHeader("tikGik-correlation-id") String correlationId
+            ) {
         return buildVersion;
     }
-
+    @ToLog
     @GetMapping("/contact")
-    public CardsContactInfoDto contact() {
+    public CardsContactInfoDto contact(
+            @RequestHeader("tikGik-correlation-id") String correlationId
+            ) {
         return accountsContactInfoDto;
     }
 }

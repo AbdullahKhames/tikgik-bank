@@ -1,3 +1,7 @@
+logging:
+  level:
+    web: debug
+    live.tikgik.bank.configserver: debug
 server:
   port: 8071
 encrypt:

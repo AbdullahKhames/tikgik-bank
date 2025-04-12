@@ -1,6 +1,7 @@
 logging:
   level:
     web: debug
+    live.tikgik.bank.eurekaserver: debug
 management:
   endpoints:
     web:

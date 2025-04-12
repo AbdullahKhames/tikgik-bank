@@ -14,6 +14,6 @@ public interface CustomerService {
     Customer findById(Long customerId);
 
     CustomerResponseDto toDto(Customer customer);
-    CustomerDetailsDto fetchCustomerDetails(String mobileNumber);
+    CustomerDetailsDto fetchCustomerDetails(String mobileNumber, String correlationId);
 
 }

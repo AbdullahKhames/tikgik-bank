@@ -56,7 +56,7 @@ services:
     # build:
     #   context: ../../configserver
     #   dockerfile: Dockerfile
-    image: khames96/configserver:s8
+    image: khames96/configserver:s9
     container_name: configserver-ms
     ports:
       - "8071:8071"
@@ -76,7 +76,7 @@ services:
     # build:
     #   context: ../../eurekaserver
     #   dockerfile: Dockerfile
-    image: khames96/eurekaserver:s8
+    image: khames96/eurekaserver:s9
     container_name: eurekaserver-ms
     ports:
       - "8070:8070"
@@ -96,17 +96,48 @@ services:
       SPRING_APPLICATION_NAME: eurekaserver
       CONFIG_SERVER_URL: configserver:http://configserver:8071/
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+
+  gatewayserver:
+    # build:
+    #   context: ../../gatewayserver
+    #   dockerfile: Dockerfile
+    image: khames96/gatetwayserver:s9
+    container_name: gatewayserver-ms
+    ports:
+      - "8072:8072"
+    extends:
+      file: common-config.yml
+      service: microservice-base-config
+    depends_on:
+      accounts:
+        condition: service_healthy
+      banks:
+        condition: service_healthy
+      cards:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: gatewayserver
+      EUREKA_SERVER_URL: http://eurekaserver:8070/eureka/
+      CONFIG_SERVER_URL: configserver:http://configserver:8071/
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+
   accounts:
     # build:
     #   context: ../../account
     #   dockerfile: Dockerfile
-    image: khames96/account:s8
+    image: khames96/account:s9
     container_name: accounts-ms
     ports:
       - "8081:8081"
     depends_on:
       accountsDb:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8081/api/actuator/health/readiness"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     environment:
       SPRING_APPLICATION_NAME: "account"
       SPRING_DATASOURCE_URL: "jdbc:postgresql://accountsDb:5432/tikgik_bank_account"
@@ -118,13 +149,19 @@ services:
     # build:
     #   context: ../../bank
     #   dockerfile: Dockerfile
-    image: khames96/bank:s8
+    image: khames96/bank:s9
     container_name: banks-ms
     ports:
       - "8083:8083"
     depends_on:
       banksDb:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8083/api/actuator/health/readiness"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     environment:
       SPRING_APPLICATION_NAME: "bank"
       SPRING_DATASOURCE_URL: "jdbc:postgresql://banksDb:5432/tikgik_bank_bank"
@@ -136,19 +173,62 @@ services:
     # build:
     #   context: ../../card
     #   dockerfile: Dockerfile
-    image: khames96/card:s8
+    image: khames96/card:s9
     container_name: cards-ms
     ports:
       - "8082:8082"
     depends_on:
       cardsDb:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8082/api/actuator/health/readiness"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     environment:
       SPRING_APPLICATION_NAME: "card"
       SPRING_DATASOURCE_URL: "jdbc:postgresql://cardsDb:5432/tikgik_bank_card"
     extends:
       file: common-config.yml
       service: microservice-configserver-config
+
+#  banks1:
+#    # build:
+#    #   context: ../../bank
+#    #   dockerfile: Dockerfile
+#    image: khames96/bank:s9
+#    container_name: banks-ms1
+#    ports:
+#      - "8084:8083"
+#    depends_on:
+#      banksDb:
+#        condition: service_healthy
+#    environment:
+#      SPRING_APPLICATION_NAME: "bank"
+#      SPRING_DATASOURCE_URL: "jdbc:postgresql://banksDb:5432/tikgik_bank_bank"
+#    extends:
+#      file: common-config.yml
+#      service: microservice-configserver-config
+#
+#  cards1:
+#    # build:
+#    #   context: ../../card
+#    #   dockerfile: Dockerfile
+#    image: khames96/card:s9
+#    container_name: cards-ms1
+#    ports:
+#      - "8085:8082"
+#    depends_on:
+#      cardsDb:
+#        condition: service_healthy
+#    environment:
+#      SPRING_APPLICATION_NAME: "card"
+#      SPRING_DATASOURCE_URL: "jdbc:postgresql://cardsDb:5432/tikgik_bank_card"
+#    extends:
+#      file: common-config.yml
+#      service: microservice-configserver-config
+
 
 networks:
   tikgikBank:

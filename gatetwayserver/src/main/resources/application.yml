@@ -1,0 +1,41 @@
+logging:
+  level:
+    web: debug
+    live.tikgik.bank.gatetwayserver: debug
+
+spring:
+  application:
+    name: gatewayserver
+  config:
+    import: ${CONFIG_SERVER_URL:optional:configserver:http://localhost:8071/}
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          # making this as false will prevent the default behaviour which is to go lookup service name based from eureka!
+          enabled: false
+          lower-case-service-id: true
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: guest
+    password: guest
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      access: unrestricted
+    shutdown:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: "gateway"
+    description: "Eazy Bank gateway Application"
+    version: "1.0.0"

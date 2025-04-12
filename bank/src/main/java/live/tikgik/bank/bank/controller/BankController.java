@@ -1,5 +1,6 @@
 package live.tikgik.bank.bank.controller;
 
+import live.tikgik.bank.bank.aop.ToLog;
 import live.tikgik.bank.bank.config.BanksContactInfoDto;
 import live.tikgik.bank.bank.dto.request.BankRequestDto;
 import live.tikgik.bank.bank.dto.response.BankResponseDto;
@@ -20,33 +21,52 @@ public class BankController {
     @Value("${build.version}")
     private String buildVersion;
     @PostMapping
-    public ResponseEntity<BankResponseDto> create(@RequestBody BankRequestDto bankRequestDto) {
+    @ToLog
+    public ResponseEntity<BankResponseDto> create(
+            @RequestHeader("tikGik-correlation-id") String correlationId,
+            @RequestBody BankRequestDto bankRequestDto) {
         return ResponseEntity.ok(bankService.createBank(bankRequestDto));
     }
+    @ToLog
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable String id) {
+    public ResponseEntity<String> delete(
+            @RequestHeader("tikGik-correlation-id") String correlationId,
+            @PathVariable String id) {
         return ResponseEntity.ok(bankService.deleteBank(id));
     }
+    @ToLog
     @GetMapping("/{id}")
-    public ResponseEntity<BankResponseDto> get(@PathVariable String id) {
+    public ResponseEntity<BankResponseDto> get(
+            @RequestHeader("tikGik-correlation-id") String correlationId,
+            @PathVariable String id) {
         return ResponseEntity.ok(bankService.getBank(id));
     }
+    @ToLog
     @GetMapping
-    public ResponseEntity<List<BankResponseDto>> getAll() {
+    public ResponseEntity<List<BankResponseDto>> getAll(
+            @RequestHeader("tikGik-correlation-id") String correlationId
+            ) {
         return ResponseEntity.ok(bankService.getAllBanks());
     }
+    @ToLog
     @PutMapping("/{id}")
-    public ResponseEntity<BankResponseDto> update(@PathVariable String id, @RequestBody BankRequestDto bankRequestDto) {
+    public ResponseEntity<BankResponseDto> update(
+            @RequestHeader("tikGik-correlation-id") String correlationId,
+            @PathVariable String id, @RequestBody BankRequestDto bankRequestDto) {
         return ResponseEntity.ok(bankService.updateBank(id, bankRequestDto));
     }
-
+    @ToLog
     @GetMapping("/build-version")
-    public String test() {
+    public String test(
+            @RequestHeader("tikGik-correlation-id") String correlationId
+            ) {
         return buildVersion;
     }
-
+    @ToLog
     @GetMapping("/contact")
-    public BanksContactInfoDto contact() {
+    public BanksContactInfoDto contact(
+            @RequestHeader("tikGik-correlation-id") String correlationId
+            ) {
         return accountsContactInfoDto;
     }
 
