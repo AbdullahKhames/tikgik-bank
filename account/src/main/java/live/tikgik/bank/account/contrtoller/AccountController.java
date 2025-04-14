@@ -1,5 +1,7 @@
 package live.tikgik.bank.account.contrtoller;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import live.tikgik.bank.account.aop.ToLog;
 import live.tikgik.bank.account.config.AccountsContactInfoDto;
 import live.tikgik.bank.account.dto.request.AccountRequestDto;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/v1/account")
@@ -25,7 +28,7 @@ public class AccountController {
     @PostMapping
     @ToLog
     public ResponseEntity<AccountResponseDto> createAccount(
-            @RequestHeader("tikGik-correlation-id") String correlationId,
+            
             @RequestBody AccountRequestDto accountRequestDto) {
         log.debug("creating account: {}", accountRequestDto);
         return ResponseEntity.ok(accountService.createAccount(accountRequestDto));
@@ -33,44 +36,65 @@ public class AccountController {
     @DeleteMapping("/{accountId}")
     @ToLog
     public ResponseEntity<String> deleteAccount(
-            @RequestHeader("tikGik-correlation-id") String correlationId,
+            
             @PathVariable Long accountId) {
         return ResponseEntity.ok(accountService.deleteAccount(accountId));
     }
     @GetMapping("/{accountId}")
     @ToLog
     public ResponseEntity<AccountResponseDto> getAccount(
-            @RequestHeader("tikGik-correlation-id") String correlationId,
+            
             @PathVariable Long accountId) {
         return ResponseEntity.ok(accountService.getAccount(accountId));
     }
     @ToLog
     @GetMapping
     public ResponseEntity<List<AccountResponseDto>> getAllAccounts(
-            @RequestHeader("tikGik-correlation-id") String correlationId) {
+            ) {
         return ResponseEntity.ok(accountService.getAllAccounts());
     }
     @PutMapping("/{accountId}")
     @ToLog
     public ResponseEntity<AccountResponseDto> updateAccount(
-            @RequestHeader("tikGik-correlation-id") String correlationId,
+            
             @PathVariable Long accountId, @RequestBody AccountRequestDto accountRequestDto) {
         return ResponseEntity.ok(accountService.updateAccount(accountId, accountRequestDto));
     }
 
+    @Retry(name = "getBuildVersion",
+            fallbackMethod = "getBuildVersionFallback")
     @GetMapping("/build-version")
     @ToLog
     public String test(
-            @RequestHeader("tikGik-correlation-id") String correlationId
+            
             ) {
         return buildVersion;
     }
 
+    // must be of same signature except of name and add throwable parameter
+    public String getBuildVersionFallback(
+            Throwable throwable
+    ) {
+        log.error("getBuildVersionFallback", throwable);
+        return "0.9";
+    }
+    @RateLimiter(name = "getContactInfo", fallbackMethod = "getContactInfoFallBack")
     @GetMapping("/contact")
     @ToLog
     public AccountsContactInfoDto contact(
-            @RequestHeader("tikGik-correlation-id") String correlationId
+            
             ) {
         return accountsContactInfoDto;
     }
+    public AccountsContactInfoDto getContactInfoFallBack(
+                Throwable throwable
+            ) {
+        log.error("getContactInfoFallBack", throwable);
+        return new AccountsContactInfoDto(
+                "default Contacts",
+                Map.of("name", "hamada"),
+                List.of("123")
+        );
+    }
+
 }

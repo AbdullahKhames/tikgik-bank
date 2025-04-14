@@ -1,11 +1,15 @@
 package live.tikgik.bank.card.aop;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.context.request.WebRequest;
 
 @Aspect
 @Component
@@ -14,7 +18,16 @@ public class LoggerAspect {
 
     @Before(value = "@annotation(ToLog)")
     public void logPointcut(JoinPoint joinPoint) {
-        log.debug(Thread.currentThread().getName());
-        log.debug("executing method: {} with correlation id {}", joinPoint.getSignature().getName(), joinPoint.getArgs()[0]);
+        ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attrs != null) {
+            HttpServletRequest request = attrs.getRequest();
+            String correlationId = request.getHeader("tikGik-correlation-id");
+
+            log.debug(Thread.currentThread().getName());
+            log.debug("Executing method: {} with correlation ID: {}",
+                    joinPoint.getSignature().getName(), correlationId);
+        } else {
+            log.debug("No request context available.");
+        }
     }
 }

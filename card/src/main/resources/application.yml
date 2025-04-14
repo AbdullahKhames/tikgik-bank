@@ -29,7 +29,7 @@ spring:
   config:
     import: ${CONFIG_SERVER_URL:optional:configserver:http://localhost:8071/}
   rabbitmq:
-    host: "localhost"
+    host: ${RABBIT_MQ_HOST:localhost}
     port: 5672
     username: guest
     password: guest

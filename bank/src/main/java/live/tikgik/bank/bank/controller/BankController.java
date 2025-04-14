@@ -23,49 +23,49 @@ public class BankController {
     @PostMapping
     @ToLog
     public ResponseEntity<BankResponseDto> create(
-            @RequestHeader("tikGik-correlation-id") String correlationId,
+            
             @RequestBody BankRequestDto bankRequestDto) {
         return ResponseEntity.ok(bankService.createBank(bankRequestDto));
     }
     @ToLog
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(
-            @RequestHeader("tikGik-correlation-id") String correlationId,
+            
             @PathVariable String id) {
         return ResponseEntity.ok(bankService.deleteBank(id));
     }
     @ToLog
     @GetMapping("/{id}")
     public ResponseEntity<BankResponseDto> get(
-            @RequestHeader("tikGik-correlation-id") String correlationId,
+            
             @PathVariable String id) {
         return ResponseEntity.ok(bankService.getBank(id));
     }
     @ToLog
     @GetMapping
     public ResponseEntity<List<BankResponseDto>> getAll(
-            @RequestHeader("tikGik-correlation-id") String correlationId
+            
             ) {
         return ResponseEntity.ok(bankService.getAllBanks());
     }
     @ToLog
     @PutMapping("/{id}")
     public ResponseEntity<BankResponseDto> update(
-            @RequestHeader("tikGik-correlation-id") String correlationId,
+            
             @PathVariable String id, @RequestBody BankRequestDto bankRequestDto) {
         return ResponseEntity.ok(bankService.updateBank(id, bankRequestDto));
     }
     @ToLog
     @GetMapping("/build-version")
     public String test(
-            @RequestHeader("tikGik-correlation-id") String correlationId
+            
             ) {
         return buildVersion;
     }
     @ToLog
     @GetMapping("/contact")
     public BanksContactInfoDto contact(
-            @RequestHeader("tikGik-correlation-id") String correlationId
+            
             ) {
         return accountsContactInfoDto;
     }

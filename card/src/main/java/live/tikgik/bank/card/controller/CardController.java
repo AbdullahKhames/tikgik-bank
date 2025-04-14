@@ -23,49 +23,49 @@ public class CardController {
     @PostMapping
     @ToLog
     public ResponseEntity<CardResponseDto> create(
-            @RequestHeader("tikGik-correlation-id") String correlationId,
+            
             @RequestBody CardRequestDto cardRequestDto) {
         return ResponseEntity.ok(cardService.createCard(cardRequestDto));
     }
     @DeleteMapping("/{id}")
     @ToLog
     public ResponseEntity<String> delete(
-            @RequestHeader("tikGik-correlation-id") String correlationId,
+            
             @PathVariable String id) {
         return ResponseEntity.ok(cardService.deleteCard(id));
     }
     @ToLog
     @GetMapping("/{id}")
     public ResponseEntity<CardResponseDto> get(
-            @RequestHeader("tikGik-correlation-id") String correlationId,
+            
             @PathVariable String id) {
         return ResponseEntity.ok(cardService.getCard(id));
     }
     @ToLog
     @GetMapping
     public ResponseEntity<List<CardResponseDto>> getAll(
-            @RequestHeader("tikGik-correlation-id") String correlationId
+            
             ) {
         return ResponseEntity.ok(cardService.getAllCards());
     }
     @ToLog
     @PutMapping("/{id}")
     public ResponseEntity<CardResponseDto> update(
-            @RequestHeader("tikGik-correlation-id") String correlationId,
+            
             @PathVariable String id, @RequestBody CardRequestDto cardRequestDto) {
         return ResponseEntity.ok(cardService.updateCard(id, cardRequestDto));
     }
     @ToLog
     @GetMapping("/build-version")
     public String test(
-            @RequestHeader("tikGik-correlation-id") String correlationId
+            
             ) {
         return buildVersion;
     }
     @ToLog
     @GetMapping("/contact")
     public CardsContactInfoDto contact(
-            @RequestHeader("tikGik-correlation-id") String correlationId
+            
             ) {
         return accountsContactInfoDto;
     }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-@FeignClient("bank")
+@FeignClient(name = "bank", fallback = BanksFallback.class)
 public interface BankFeignClient {
 
     @GetMapping("/api/v1/banks/{mobileNumber}")

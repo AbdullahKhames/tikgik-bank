@@ -16,7 +16,21 @@ services:
   #   extends:
   #     file: common-config.yml
   #     service: network-deploy-service
-
+  redis:
+    image: redis
+    container_name: redis-Db
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      timeout: 10s
+      retries: 10
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+    volumes:
+      - redisdb-data:/data
+    command: ["redis-server", "--appendonly", "yes"]
   accountsDb:
     image: postgres
     container_name: accounts-Db
@@ -56,7 +70,7 @@ services:
     # build:
     #   context: ../../configserver
     #   dockerfile: Dockerfile
-    image: khames96/configserver:s9
+    image: khames96/configserver:s10
     container_name: configserver-ms
     ports:
       - "8071:8071"
@@ -76,7 +90,7 @@ services:
     # build:
     #   context: ../../eurekaserver
     #   dockerfile: Dockerfile
-    image: khames96/eurekaserver:s9
+    image: khames96/eurekaserver:s10
     container_name: eurekaserver-ms
     ports:
       - "8070:8070"
@@ -101,7 +115,7 @@ services:
     # build:
     #   context: ../../gatewayserver
     #   dockerfile: Dockerfile
-    image: khames96/gatetwayserver:s9
+    image: khames96/gatetwayserver:s10
     container_name: gatewayserver-ms
     ports:
       - "8072:8072"
@@ -115,17 +129,24 @@ services:
         condition: service_healthy
       cards:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: gatewayserver
       EUREKA_SERVER_URL: http://eurekaserver:8070/eureka/
       CONFIG_SERVER_URL: configserver:http://configserver:8071/
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      SPRING_DATA_REDIS_CONNECT-TIMEOUT: 2s
+      SPRING_DATA_REDIS_HOST: redis
+      REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_DATA_REDIS_TIMEOUT: 1s
 
   accounts:
     # build:
     #   context: ../../account
     #   dockerfile: Dockerfile
-    image: khames96/account:s9
+    image: khames96/account:s10
     container_name: accounts-ms
     ports:
       - "8081:8081"
@@ -149,7 +170,7 @@ services:
     # build:
     #   context: ../../bank
     #   dockerfile: Dockerfile
-    image: khames96/bank:s9
+    image: khames96/bank:s10
     container_name: banks-ms
     ports:
       - "8083:8083"
@@ -173,7 +194,7 @@ services:
     # build:
     #   context: ../../card
     #   dockerfile: Dockerfile
-    image: khames96/card:s9
+    image: khames96/card:s10
     container_name: cards-ms
     ports:
       - "8082:8082"
@@ -197,7 +218,7 @@ services:
 #    # build:
 #    #   context: ../../bank
 #    #   dockerfile: Dockerfile
-#    image: khames96/bank:s9
+#    image: khames96/bank:s10
 #    container_name: banks-ms1
 #    ports:
 #      - "8084:8083"
@@ -215,7 +236,7 @@ services:
 #    # build:
 #    #   context: ../../card
 #    #   dockerfile: Dockerfile
-#    image: khames96/card:s9
+#    image: khames96/card:s10
 #    container_name: cards-ms1
 #    ports:
 #      - "8085:8082"
@@ -238,3 +259,4 @@ volumes:
   accountdb-data:
   bankdb-data:
   carddb-data:
+  redisdb-data:

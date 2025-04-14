@@ -40,7 +40,7 @@ spring:
           # override the local changes when ever you try to start or restart the config server
           force-pull: true
   rabbitmq:
-    host: "localhost"
+    host: ${RABBIT_MQ_HOST:localhost}
     port: 5672
     username: guest
     password: guest

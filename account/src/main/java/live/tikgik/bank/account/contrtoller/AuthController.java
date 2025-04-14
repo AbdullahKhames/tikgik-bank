@@ -21,7 +21,7 @@ public class AuthController {
     @PostMapping("/signup")
     @ToLog
     public ResponseEntity<ResponseDto<String>> signup(
-            @RequestHeader("tikGik-correlation-id") String correlationId,
+            
             @Valid @RequestBody CustomerRequestDto customerRequestDto) {
         String response = authService.signup(customerRequestDto);
         return ResponseEntity
@@ -31,7 +31,7 @@ public class AuthController {
     @PostMapping("/login")
     @ToLog
     public ResponseEntity<ResponseDto<String>> login(
-            @RequestHeader("tikGik-correlation-id") String correlationId,
+            
             @Valid  @RequestBody LoginRequest customerRequestDto) {
         String response = authService.login(customerRequestDto);
         return ResponseEntity
