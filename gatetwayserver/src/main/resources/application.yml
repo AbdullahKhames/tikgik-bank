@@ -19,13 +19,13 @@ spring:
         # time for gateway server to take to get a connection thread to the other microservice
         connect-timeout: 1000
         #  time to receive response from respective microservice
-        response-timeout: 2s
+        response-timeout: 20s
   data:
     redis:
-      connect-timeout: 2s
+      connect-timeout: 20s
       host: ${REDIS_HOST:localhost}
       port: 6379
-      timeout: 1s
+      timeout: 20s
   rabbitmq:
     host: ${RABBIT_MQ_HOST:localhost}
     port: 5672
@@ -44,6 +44,9 @@ management:
   info:
     env:
       enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 info:
   app:
