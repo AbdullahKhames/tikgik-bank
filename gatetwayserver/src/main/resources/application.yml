@@ -2,6 +2,8 @@ logging:
   level:
     web: debug
     live.tikgik.bank.gatetwayserver: debug
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
 
 spring:
   application:
@@ -31,6 +33,11 @@ spring:
     port: 5672
     username: guest
     password: guest
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${JWK-SET-URI:http://localhost:7080/realms/master/protocol/openid-connect/certs}
 management:
   endpoints:
     web:

@@ -26,6 +26,10 @@ services:
     environment:
       SPRING_RABBITMQ_HOST: "rabbit"
       RABBIT_MQ_HOST: "rabbit"
+      JAVA_TOOL_OPTIONS: "-javaagent:/app/libs/opentelemetry-javaagent-2.11.0.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4318
+      OTEL_METRICS_EXPORTER: none
+      OTEL_LOGS_EXPORTER: none
 
   microservice-configserver-config:
     extends:
@@ -43,3 +47,9 @@ services:
       EUREKA_SERVER_URL: http://eurekaserver:8070/eureka/
       SPRING_DATASOURCE_USERNAME: dev
       SPRING_DATASOURCE_PASSWORD: 123
+
+  microservice-eureka-config:
+    extends:
+      service: microservice-configserver-config
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/

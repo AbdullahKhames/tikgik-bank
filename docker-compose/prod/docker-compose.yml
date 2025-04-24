@@ -16,6 +16,18 @@ services:
   #   extends:
   #     file: common-config.yml
   #     service: network-deploy-service
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.7
+    container_name: keycloak
+    ports:
+      - "7080:8080"
+    environment:
+      KEYCLOAK_ADMIN: "admin"
+      KEYCLOAK_ADMIN_PASSWORD: "admin"
+    command: "start-dev"
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
   read:
     image: grafana/loki:3.1.2
     command: "-config.file=/etc/loki/config.yaml -target=read"
@@ -101,7 +113,7 @@ services:
     image: prom/prometheus:v3.1.0
     container_name: prometheus
     ports:
-      - "9090:9090"
+      - ":9090"
     volumes:
       - ../observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     extends:
@@ -284,7 +296,7 @@ services:
     # build:
     #   context: ../../configserver
     #   dockerfile: Dockerfile
-    image: khames96/configserver:s11
+    image: khames96/configserver:s12
     container_name: configserver-ms
     ports:
       - "8071:8071"
@@ -306,7 +318,7 @@ services:
     # build:
     #   context: ../../eurekaserver
     #   dockerfile: Dockerfile
-    image: khames96/eurekaserver:s11
+    image: khames96/eurekaserver:s12
     container_name: eurekaserver-ms
     ports:
       - "8070:8070"
@@ -332,7 +344,7 @@ services:
     # build:
     #   context: ../../gatewayserver
     #   dockerfile: Dockerfile
-    image: khames96/gatetwayserver:s11
+    image: khames96/gatetwayserver:s12
     container_name: gatewayserver-ms
     ports:
       - "8072:8072"
@@ -360,15 +372,17 @@ services:
       SPRING_DATA_REDIS_PORT: 6379
       SPRING_DATA_REDIS_TIMEOUT: 1s
       OTEL_SERVICE_NAME: "gatewayserver"
+      JWK-SET-URI: "http://keycloak:8080/realms/master/protocol/openid-connect/certs"
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI: "http://keycloak:8080/realms/master/protocol/openid-connect/certs"
 
   accounts:
     # build:
     #   context: ../../account
     #   dockerfile: Dockerfile
-    image: khames96/account:s11
+    image: khames96/account:s12
     container_name: accounts-ms
-    ports:
-      - "8081:8081"
+    #    ports:
+    #      - "8081:8081"
     depends_on:
       accountsDb:
         condition: service_healthy
@@ -390,10 +404,10 @@ services:
     # build:
     #   context: ../../bank
     #   dockerfile: Dockerfile
-    image: khames96/bank:s11
+    image: khames96/bank:s12
     container_name: banks-ms
-    ports:
-      - "8083:8083"
+    #    ports:
+    #      - "8083:8083"
     depends_on:
       banksDb:
         condition: service_healthy
@@ -414,10 +428,10 @@ services:
     # build:
     #   context: ../../card
     #   dockerfile: Dockerfile
-    image: khames96/card:s11
+    image: khames96/card:s12
     container_name: cards-ms
-    ports:
-      - "8082:8082"
+    #    ports:
+    #      - "8082:8082"
     depends_on:
       cardsDb:
         condition: service_healthy
@@ -438,10 +452,10 @@ services:
     # build:
     #   context: ../../bank
     #   dockerfile: Dockerfile
-    image: khames96/bank:s11
+    image: khames96/bank:s12
     container_name: banks-ms1
-    ports:
-      - "8084:8083"
+    #    ports:
+    #      - "8084:8083"
     depends_on:
       banksDb:
         condition: service_healthy
@@ -450,16 +464,16 @@ services:
       SPRING_DATASOURCE_URL: "jdbc:postgresql://banksDb:5432/tikgik_bank_bank"
     extends:
       file: common-config.yml
-      service: microservice-configserver-config
+      service: microservice-eureka-config
 
   cards1:
     # build:
     #   context: ../../card
     #   dockerfile: Dockerfile
-    image: khames96/card:s11
+    image: khames96/card:s12
     container_name: cards-ms1
-    ports:
-      - "8085:8082"
+    #    ports:
+    #      - "8085:8082"
     depends_on:
       cardsDb:
         condition: service_healthy
@@ -468,7 +482,7 @@ services:
       SPRING_DATASOURCE_URL: "jdbc:postgresql://cardsDb:5432/tikgik_bank_card"
     extends:
       file: common-config.yml
-      service: microservice-configserver-config
+      service: microservice-eureka-config
 
 
 networks:

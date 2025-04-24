@@ -6,6 +6,8 @@ logging:
   level:
     web: debug
     live.tikgik.bank.bank: debug
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
 spring:
   datasource:
 #    url: ${DB_URL:jdbc:postgresql://localhost:5432/tikgik_bank_bank}
