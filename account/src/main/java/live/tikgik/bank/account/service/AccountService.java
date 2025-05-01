@@ -16,4 +16,6 @@ public interface AccountService {
     List<AccountResponseDto> getAllAccounts();
 
     AccountResponseDto updateAccount(Long accountId, AccountRequestDto accountRequestDto);
+
+    boolean updateCommunicationStatus(Long accountNumber);
 }

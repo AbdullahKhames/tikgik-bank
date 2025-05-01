@@ -30,6 +30,8 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4318
       OTEL_METRICS_EXPORTER: none
       OTEL_LOGS_EXPORTER: none
+      SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS: "broker:9092"
+      KAFKA_BROKER: "broker:9092"
 
   microservice-configserver-config:
     extends:
@@ -39,6 +41,10 @@ services:
         condition: service_healthy
       eurekaserver:
         condition: service_healthy
+      broker:
+        condition: service_started
+#      rabbit:
+#        condition: service_healthy
     environment:
       SPRING_PROFILES_ACTIVE: default
       CONFIG_SERVER_URL: configserver:http://configserver:8071/
