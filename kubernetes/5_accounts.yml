@@ -1,0 +1,101 @@
+# accounts-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: accounts-deployment
+  labels:
+    app: accounts
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: accounts
+  template:
+    metadata:
+      labels:
+        app: accounts
+    spec:
+      containers:
+      - name: accounts
+        image: docker.io/khames96/account:s10
+        ports:
+        - containerPort: 8081
+        env:
+        - name: SPRING_APPLICATION_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: tikgikbank-configmap
+              key: ACCOUNTS_APPLICATION_NAME
+        - name: SPRING_PROFILES_ACTIVE
+          valueFrom: 
+            configMapKeyRef:
+              name: tikgikbank-configmap
+              key: SPRING_PROFILES_ACTIVE
+        - name: SPRING_CONFIG_IMPORT
+          valueFrom: 
+            configMapKeyRef:
+              name: tikgikbank-configmap
+              key: SPRING_CONFIG_IMPORT
+        - name: CONFIG_SERVER_URL
+          valueFrom: 
+            configMapKeyRef:
+              name: tikgikbank-configmap
+              key: SPRING_CONFIG_IMPORT
+        - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+          valueFrom: 
+            configMapKeyRef:
+              name: tikgikbank-configmap
+              key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        - name: SPRING_DATASOURCE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: tikgikbank-configmap
+              key: DB_URL_ACCOUNT
+        - name: DB_URL_ACCOUNT
+          valueFrom:
+            configMapKeyRef:
+              name: tikgikbank-configmap
+              key: DB_URL_ACCOUNT
+        - name: DB_URL_ACCOUNT
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: spring-datasource-username
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: spring-datasource-password
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        # livenessProbe:
+        #   httpGet:
+        #     path: /api/actuator/health
+        #     port: 8081
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 10
+        # readinessProbe:
+        #   httpGet:
+        #     path: /api/actuator/health
+        #     port: 8081
+        #   initialDelaySeconds: 20
+        #   periodSeconds: 5
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: accounts
+spec:
+  selector:
+    app: accounts
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081

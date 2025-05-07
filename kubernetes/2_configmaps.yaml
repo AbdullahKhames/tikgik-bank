@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tikgikbank-configmap
+data:
+  # Common configuration
+  SPRING_PROFILES_ACTIVE: "prod"
+  SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/"
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eurekaserver:8070/eureka/"
+  CONFIG_SERVER_URL: "configserver:http://configserver:8071/"
+  EUREKA_SERVER_URL: "http://eurekaserver:8070/eureka/"
+  DB_DRIVER: "org.postgresql.Driver"
+
+  # Service-specific names
+  ACCOUNTS_APPLICATION_NAME: "account"
+  BANKS_APPLICATION_NAME: "bank"
+  CARDS_APPLICATION_NAME: "card"
+  CONFIGSERVER_APPLICATION_NAME: "configserver"
+  EUREKA_APPLICATION_NAME: "eurekaserver"
+  GATEWAY_APPLICATION_NAME: "gatewayserver"
+
+  # DB connection strings (will be used by services)
+  DB_URL_ACCOUNT: "jdbc:postgresql://accounts-db:5432/accountsdb"
+  DB_URL_BANK: "jdbc:postgresql://banks-db:5432/banksdb"
+  DB_URL_CARD: "jdbc:postgresql://cards-db:5432/cardsdb"
+  
+   
+  # Init SQL scripts
+  accounts-init.sql: |
+    CREATE DATABASE IF NOT EXISTS accountsdb;
+  banks-init.sql: |
+    CREATE DATABASE IF NOT EXISTS banksdb;
+  cards-init.sql: |
+    CREATE DATABASE IF NOT EXISTS cardsdb;
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-credentials
+type: Opaque
+data:
+  postgres-user: ZGV2  # base64 encoded 'dev'
+  postgres-password: MTIz  # base64 encoded '123'
+  spring-datasource-username: ZGV2
+  spring-datasource-password: MTIz
+  DB_USERNAME: ZGV2
+  DB_PASSWORD: MTIz

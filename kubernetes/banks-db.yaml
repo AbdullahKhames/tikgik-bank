@@ -1,0 +1,67 @@
+# banks-db.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: banks-db
+spec:
+  serviceName: banks-db
+  replicas: 1
+  selector:
+    matchLabels:
+      app: banks-db
+  template:
+    metadata:
+      labels:
+        app: banks-db
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:13
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: "banksdb"
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: postgres-user
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: postgres-password
+        volumeMounts:
+        - name: bankdb-data
+          mountPath: /var/lib/postgresql/data
+        - name: init-sql
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+      - name: init-sql
+        configMap:
+          name: tikgikbank-configmap
+          items:
+          - key: banks-init.sql
+            path: init.sql
+  volumeClaimTemplates:
+  - metadata:
+      name: bankdb-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: banks-db
+spec:
+  selector:
+    app: banks-db
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432

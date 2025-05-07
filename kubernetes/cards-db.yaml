@@ -1,0 +1,67 @@
+# cards-db.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: cards-db
+spec:
+  serviceName: cards-db
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cards-db
+  template:
+    metadata:
+      labels:
+        app: cards-db
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:13
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: "cardsdb"
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: postgres-user
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: postgres-password
+        volumeMounts:
+        - name: carddb-data
+          mountPath: /var/lib/postgresql/data
+        - name: init-sql
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+      - name: init-sql
+        configMap:
+          name: tikgikbank-configmap
+          items:
+          - key: cards-init.sql
+            path: init.sql
+  volumeClaimTemplates:
+  - metadata:
+      name: carddb-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cards-db
+spec:
+  selector:
+    app: cards-db
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
